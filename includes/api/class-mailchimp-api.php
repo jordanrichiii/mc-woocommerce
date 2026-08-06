@@ -11,6 +11,7 @@ class MailChimp_WooCommerce_MailChimpApi {
 	protected $auth_type   = 'key';
     protected $allow_audience_put = true;
     protected $auto_doi = false;
+    protected $is_syncing = null;
 
 	/** @var null|MailChimp_WooCommerce_MailChimpApi */
 	protected static $instance = null;
@@ -41,6 +42,17 @@ class MailChimp_WooCommerce_MailChimpApi {
 			$this->setApiKey( $api_key );
 		}
 	}
+
+    public function setIsSyncing($bool = true)
+    {
+        $this->is_syncing = (bool) $bool;
+        return $this;
+    }
+
+    public function isSyncing()
+    {
+        return $this->is_syncing;
+    }
 
     /**
      * @param $bool
@@ -3144,7 +3156,7 @@ class MailChimp_WooCommerce_MailChimpApi {
             $headers
         );
 
-        if ($env->initial_sync) {
+        if ($this->is_syncing) {
             $headers[] = 'X-Data-Mode: historical';
         }
 
